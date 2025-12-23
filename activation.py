@@ -59,7 +59,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--model", type=str, default="meta-llama/Llama-2-7b-hf")
     parser.add_argument("-l", "--lang", type=str, default="zh")
-    parser.add_argument("--max_tokens_to_use", type=int, default=99_999_744,
+    parser.add_argument("--max_tokens_to_use", type=int, default=100_000_000,
                         help="Cap total tokens used from the id.* tensor before reshaping.")
     parser.add_argument("--data_prefix", type=str, default="data",
                         help="Folder containing id.* token tensors and where outputs will be saved.")
