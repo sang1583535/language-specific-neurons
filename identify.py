@@ -1,18 +1,9 @@
+import argparse
+
 import torch
 import torch.nn.functional as F
 
-n, over_zero = [], []
-for lang in ['en', 'zh', 'fr', 'es', 'vi', 'id', 'ja']:
-    data = torch.load(f'data/activation.{lang}.train.llama-70b')
-    n.append(data['n'])
-    over_zero.append(data['over_zero'])
-
-n = torch.tensor(n)
-over_zero = torch.stack(over_zero, dim=-1)
-
-num_layers, intermediate_size, lang_num = over_zero.size()
-
-def activation():
+def activation(n, num_layers, over_zero, mask_file_path):
     top_rate = 0.01
     filter_rate = 0.95
     activation_bar_ratio = 0.95
@@ -60,6 +51,30 @@ def activation():
         for l, h in enumerate(layer_index):
             layer_index[l] = torch.tensor(h).long()
         final_indice.append(layer_index)
-    torch.save(final_indice, f"activation_mask/llama-70b")  
+    torch.save(final_indice, mask_file_path)
 
-activation()
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--languages", type=str, nargs='+', default=['id', 'vi', 'zh'])
+    parser.add_argument("--data_prefix", type=str, default="data/parallel-only-7B-34B/ckpt-34")
+    parser.add_argument("--model_type", type=str, default="olmo2")
+    parser.add_argument("--mask_file_path", type=str, default="activation_mask/olmo2")
+    args = parser.parse_args()
+
+    langs = args.languages
+
+    n, over_zero = [], []
+    for lang in langs:
+        data = torch.load(f'{args.data_prefix}/activation.{lang}.train.{args.model_type}')
+        n.append(data['n'])
+        over_zero.append(data['over_zero'])
+
+    n = torch.tensor(n)
+    over_zero = torch.stack(over_zero, dim=-1)
+
+    num_layers, intermediate_size, lang_num = over_zero.size()
+
+    print(f"Loaded activations for {lang_num} languages: {langs}")
+    print(f"Number of layers: {num_layers}, Intermediate size: {intermediate_size}")
+
+    activation(n=n, num_layers=num_layers, over_zero=over_zero, mask_file_path=args.mask_file_path)
