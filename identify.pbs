@@ -13,8 +13,18 @@ image="/app1/common/singularity-img/hopper/pytorch/pytorch_2.3.0_cuda_12.4_ngc_2
 
 module load singularity
 
+LANGUAGES="id vi zh"
+CONCAT_LANGUAGES=$(echo $LANGUAGES | tr ' ' '_')
+
+DATA_PATH="data/parallel-only-7B-34B/ckpt-34B"
+LOG_DATA_PATH="parallel-only-7B-34B/ckpt-34B"
+
+MODEL_TYPE="olmo2"
+
+MASK_FILE_PATH="activation_mask/parallel_only_7B_34B_ckpt34B_activation_mask"
+
 # mkdir logs
-LOG_DIR=./logs/indentify
+LOG_DIR=./logs/identify/$CONCAT_LANGUAGES/$LOG_DATA_PATH
 if [ ! -d "$LOG_DIR" ]; then
   mkdir -p "$LOG_DIR"
 fi
@@ -26,7 +36,11 @@ $image bash << EOF > $LOG_DIR/stdout.$PBS_JOBID.log 2> $LOG_DIR/stderr.$PBS_JOBI
 
 source /hpctmp/e1583535/virtualenvs/lsneuron/bin/activate
 
-python identify.py
+python identify.py \
+--languages $LANGUAGES \
+--data_prefix $DATA_PATH \
+--model_type $MODEL_TYPE \
+--mask_file_path $MASK_FILE_PATH
 
 echo "Done"
 
