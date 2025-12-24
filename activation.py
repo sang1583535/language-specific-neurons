@@ -63,12 +63,15 @@ def main():
                         help="Cap total tokens used from the id.* tensor before reshaping.")
     parser.add_argument("--data_prefix", type=str, default="data",
                         help="Folder containing id.* token tensors and where outputs will be saved.")
+    parser.add_argument("--output_prefix", type=str, default="data",
+                        help="Folder to save output activation counts.")
     parser.add_argument("--no_reduce", action="store_true",
                         help="Do not all_reduce over tensor-parallel ranks (debug).")
     args = parser.parse_args()
 
     # mkdir data_prefix if not exists
     os.makedirs(args.data_prefix, exist_ok=True)
+    os.makedirs(args.output_prefix, exist_ok=True)
 
     llm = LLM(
         model=args.model,
@@ -193,7 +196,7 @@ def main():
         "intermediate_size": intermediate_size,
     }
 
-    out_path = f"{args.data_prefix}/activation.{lang}.train.{out_suffix}"
+    out_path = f"{args.output_prefix}/activation.{lang}.train.{out_suffix}"
     torch.save(output, out_path)
 
     print(f"Saved: {out_path}")
