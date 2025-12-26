@@ -27,10 +27,12 @@ $image bash << EOF > $LOG_DIR/stdout.$PBS_JOBID.log 2> $LOG_DIR/stderr.$PBS_JOBI
 source /hpctmp/e1583535/virtualenvs/py310/bin/activate
 
 python build_wiki_ids.py \
-  --config 20231101.id \
-  --lang id \
+  --dataset allenai/c4 \
+  --config fil \
+  --lang tl \
   --tokenizer allenai/OLMo-2-1124-7B \
-  --model_type olmo \
+  --model_type olmo2 \
+  --out_dir /scratch/e1583535/language-specific-neurons/data/text_tokenized/c4-wiki-olmo2 \
   --add_eos
 
 echo "Done"

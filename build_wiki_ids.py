@@ -9,6 +9,7 @@ MAX_TOKENS = 100_000_000  # 100M
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--dataset", default="wikimedia/wikipedia")
     ap.add_argument("--config", required=True, help='e.g. "20231101.en"')
     ap.add_argument("--lang", required=True, help='e.g. "en"')
     ap.add_argument("--tokenizer", required=True, help='e.g. "meta-llama/Llama-2-7b-hf"')
@@ -37,7 +38,7 @@ def main():
     eos_id = tokenizer.eos_token_id
 
     ds = load_dataset(
-        "wikimedia/wikipedia",
+        args.dataset,
         args.config,
         split="train",
         streaming=True
@@ -50,7 +51,7 @@ def main():
 
     with open(tmp_bin, "wb") as f:
         for ex in ds:
-            if total_tokens >= MAX_TOKENS:
+            if total_tokens >= args.max_tokens:
                 break
 
             text = ex.get("text", "")
@@ -62,7 +63,7 @@ def main():
                 ids.append(eos_id)
 
             # Trim if this document would exceed the cap
-            remaining = MAX_TOKENS - total_tokens
+            remaining = args.max_tokens - total_tokens
             if len(ids) > remaining:
                 ids = ids[:remaining]
 
