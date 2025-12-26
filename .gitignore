@@ -1,3 +1,4 @@
 logs/
 *.o*
 activation_mask/*
+data/text_tokenized/

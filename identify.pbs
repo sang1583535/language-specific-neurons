@@ -13,15 +13,15 @@ image="/app1/common/singularity-img/hopper/pytorch/pytorch_2.3.0_cuda_12.4_ngc_2
 
 module load singularity
 
-LANGUAGES="id vi zh"
+LANGUAGES="en id vi zh"
 CONCAT_LANGUAGES=$(echo $LANGUAGES | tr ' ' '_')
 
-DATA_PATH="data/parallel-only-7B-34B/ckpt-34B"
-LOG_DATA_PATH="parallel-only-7B-34B/ckpt-34B"
+DATA_PATH="/scratch/e1583535/language-specific-neurons/data/OLMo-2-1124-7B"
+LOG_DATA_PATH="OLMo-2-1124-7B"
 
 MODEL_TYPE="olmo2"
 
-MASK_FILE_PATH="activation_mask/parallel_only_7B_34B_ckpt34B_activation_mask"
+MASK_FILE_PATH="activation_mask/olmo2_7B_activation_mask"
 
 # mkdir logs
 LOG_DIR=./logs/identify/$CONCAT_LANGUAGES/$LOG_DATA_PATH

@@ -27,10 +27,10 @@ $image bash << EOF > $LOG_DIR/stdout.$PBS_JOBID.log 2> $LOG_DIR/stderr.$PBS_JOBI
 source /hpctmp/e1583535/virtualenvs/lsneuron/bin/activate
 
 CUDA_VISIVLE_DEVICES=0 python activation.py \
--m /scratch/e1583535/llm/nus-olmo/para-only-7B-34B-checkpoints/step2385-unsharded-hf \
--l zh \
---data_prefix /scratch/e1583535/language-specific-neurons/data \
---output_prefix /scratch/e1583535/language-specific-neurons/data/parallel-only-7B-34B/ckpt-10B 
+-m /scratch/e1583535/llm/nus-olmo/para-only-7B-34B-checkpoints/step8290-unsharded-hf \
+-l tl \
+--data_prefix /scratch/e1583535/language-specific-neurons/data/text_tokenized/c4-wiki-olmo2 \
+--output_prefix /scratch/e1583535/language-specific-neurons/data/parallel-only-7B-34B/ckpt-34B
 # --max_tokens_to_use 100
 
 echo "Done"
